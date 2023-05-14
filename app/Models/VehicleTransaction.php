@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
-class Vehicle extends Eloquent
+class VehicleTransaction extends Eloquent
 {
-    protected $collection = 'vehicles';
+    protected $collection = 'vehicle_transactions';
     protected $primaryKey = '_id';
 
     use HasFactory;
     protected $fillable = [
-        'name', 'year', 'color', 'price', 'flagtype', 'posted_by'
+        'id_buyer', 'id_vehicle', 'qty', 'totalprice'
     ];
 }
