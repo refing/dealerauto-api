@@ -18,5 +18,4 @@ MONGO_DB_PASSWORD= {{dikosongkan}}
 5. Menjalankan testing `php artisan test`
 
 ## Data Schema & Routes Information
-img
-
+<img src="misc/schema.png" alt="schema"/>
