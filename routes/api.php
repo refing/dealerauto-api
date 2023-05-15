@@ -41,5 +41,5 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('transaction/{idtransaction}', [VehicleController::class, 'show']);
     Route::post('buy/{idvehicle}', [VehicleController::class, 'store']);
     // Route::put('update/{id}',  [VehicleController::class, 'update']);
-    // Route::delete('delete/{id}',  [VehicleController::class, 'destroy']);
+    Route::delete('delete/{id}',  [VehicleController::class, 'destroy']);
 });

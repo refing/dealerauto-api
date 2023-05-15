@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vehicle;
+use App\Models\Motorcycle;
+use App\Models\Car;
 use Illuminate\Http\Request;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -52,31 +54,97 @@ class VehicleController extends Controller
      */
     public function store(Request $request)
     {
-        //Validate data
-        $data = $request->only('name', 'year', 'color', 'price', 'flagtype');
-        $validator = Validator::make($data, [
+        $validatedData = $request->validate([
             'name' => 'required|string',
-            'year' => 'required',
-            'color' => 'required',
-            'price' => 'required',
-            'flagtype' => 'required',
+            'year' => 'required|integer',
+            'color' => 'required|string',
+            'price' => 'required|numeric',
+            'stock_qty' => 'required|integer',
+            'flagtype' => 'required|in:Motor,Mobil',
+            'motorcycle_machine' => 'required_if:flagtype,motor|string',
+            'suspension_type' => 'required_if:flagtype,motor|string',
+            'transmission_type' => 'required_if:flagtype,motor|string',
+            'car_machine' => 'required_if:flagtype,mobil|string',
+            'capacity' => 'required_if:flagtype,mobil|integer',
+            'car_type' => 'required_if:flagtype,mobil|string',
         ]);
 
-        //Send failed response if request is not valid
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 200);
+        $vehicle = new Vehicle([
+            'name' => $validatedData['name'],
+            'year' => $validatedData['year'],
+            'color' => $validatedData['color'],
+            'price' => $validatedData['price'],
+            'stock_qty' => $validatedData['stock_qty'],
+            'flagtype' => $validatedData['flagtype'],
+            'posted_by' => $this->user->_id,
+        ]);
+
+        if ($validatedData['flagtype'] === 'Motor') {
+            $subtype = new Motorcycle([
+                'motorcycle_machine' => $validatedData['motorcycle_machine'],
+                'suspension_type' => $validatedData['suspension_type'],
+                'transmission_type' => $validatedData['transmission_type'],
+            ]);
+        } elseif ($validatedData['flagtype'] === 'Mobil') {
+            $subtype = new Car([
+                'car_machine' => $validatedData['car_machine'],
+                'capacity' => $validatedData['capacity'],
+                'car_type' => $validatedData['car_type'],
+            ]);
         }
 
-        $vehicle           = new Vehicle();
-        $vehicle->name     = $request->input('name');
-        $vehicle->year     = $request->input('year');
-        $vehicle->color    = $request->input('color');
-        $vehicle->price    = $request->input('price');
-        $vehicle->flagtype = $request->input('flagtype');
-        $vehicle->posted_by = $this->user->_id;
         $vehicle->save();
+        $vehicle->subtype()->save($subtype);
 
-        // return $vehicle;
+
+
+        //Validate data
+        // $data = $request->only('name', 'year', 'color', 'price', 'stock_qty', 'flagtype');
+        // $validator = Validator::make($data, [
+        //     'name' => 'required|string',
+        //     'year' => 'required|integer',
+        //     'color' => 'required|string',
+        //     'price' => 'required|numeric',
+        //     'stock_qty' => 'required|integer',
+        //     'flagtype' => 'required|in:Motor,Mobil',
+        //     'motorcycle_machine' => 'required_if:flagtype,motor|string',
+        //     'suspension_type' => 'required_if:flagtype,motor|string',
+        //     'transmission_type' => 'required_if:flagtype,motor|string',
+        //     'car_machine' => 'required_if:flagtype,mobil|string',
+        //     'capacity' => 'required_if:flagtype,mobil|integer',
+        //     'car_type' => 'required_if:flagtype,mobil|string',
+        // ]);
+
+        // //Send failed response if request is not valid
+        // if ($validator->fails()) {
+        //     return response()->json(['error' => $validator->messages()], 200);
+        // }
+
+        // $vehicle           = new Vehicle();
+        // $vehicle->name     = $request->input('name');
+        // $vehicle->year     = $request->input('year');
+        // $vehicle->color    = $request->input('color');
+        // $vehicle->price    = $request->input('price');
+        // $vehicle->stock_qty    = $request->input('stock_qty');
+        // $vehicle->flagtype = $request->input('flagtype');
+        // $vehicle->posted_by = $this->user->_id;
+
+        // if ($request->input('flagtype') === 'Motor') {
+        //     $subtype           = new Motorcycle();
+        //     $subtype->motorcycle_machine = $request->input('motorcycle_machine');
+        //     $subtype->suspension_type = $request->input('suspension_type');
+        //     $subtype->transmission_type = $request->input('transmission_type');
+        // } elseif ($request->input('flagtype') === 'Mobil') {
+        //     $subtype           = new Car();
+        //     $subtype->car_machine = $request->input('car_machine');
+        //     $subtype->capacity = $request->input('capacity');
+        //     $subtype->car_type = $request->input('car_type');
+        // }
+
+        // $vehicle->save();
+        // $vehicle->subtype()->save($subtype);
+
+
 
         //Vehicles created, return success response
         return response()->json([
