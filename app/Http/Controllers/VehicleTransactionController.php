@@ -9,6 +9,7 @@ use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class VehicleTransactionController extends Controller
 {
@@ -19,11 +20,6 @@ class VehicleTransactionController extends Controller
         $this->user = JWTAuth::parseToken()->authenticate();
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         //return all vehicles for rest api
@@ -34,22 +30,6 @@ class VehicleTransactionController extends Controller
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request, $idvehicle)
     {
         //Validate data
@@ -66,6 +46,7 @@ class VehicleTransactionController extends Controller
         $vehicle = Vehicle::find($idvehicle);
 
         $vehicleTransaction           = new VehicleTransaction();
+        $vehicleTransaction->_id     = "tsc-" . Str::uuid();
         $vehicleTransaction->qty     = $request->input('qty');
         $vehicleTransaction->totalprice     = $vehicle->price * $request->input('qty');
         $vehicleTransaction->id_vehicle    = $vehicle->_id;
@@ -85,20 +66,14 @@ class VehicleTransactionController extends Controller
         ], Response::HTTP_OK);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Vehicle  $vehicle
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function show($idtransaction)
     {
         //get vehicle by id
-        $vehicleTransaction = VehicleTransaction::find($id);
+        $vehicleTransaction = VehicleTransaction::find($idtransaction);
         if (!$vehicleTransaction) {
             return response()->json([
                 'success' => false,
-                'message' => 'Sorry, transaction with id ' . $id . ' cannot be found'
+                'message' => 'Sorry, transaction with id ' . $idtransaction . ' cannot be found'
             ], 400);
         }
 
@@ -106,51 +81,4 @@ class VehicleTransactionController extends Controller
         
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\VehicleTransaction  $vehicleTransaction
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(VehicleTransaction $vehicleTransaction)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\VehicleTransaction  $vehicleTransaction
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, VehicleTransaction $vehicleTransaction)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\VehicleTransaction  $vehicleTransaction
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //delete vehicle by id for mongodb rest api
-        $vehicleTransaction = VehicleTransaction::find($id);
-        if (!$vehicleTransaction) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Sorry, vehicle transaction with id ' . $id . ' cannot be found'
-            ], 400);
-        }
-        
-        $vehicleTransaction->delete();
-        
-        return response()->json([
-            'success' => true,
-            'message' => 'Vehicle transaction deleted successfully'
-        ], Response::HTTP_OK);
-    }
 }

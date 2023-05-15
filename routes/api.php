@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehicleController;
+use App\Http\Controllers\VehicleTransactionController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -37,9 +38,9 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::put('update/{id}',  [VehicleController::class, 'update']);
     Route::delete('delete/{id}',  [VehicleController::class, 'destroy']);
 
-    Route::get('transaction', [VehicleController::class, 'index']);
-    Route::get('transaction/{idtransaction}', [VehicleController::class, 'show']);
-    Route::post('buy/{idvehicle}', [VehicleController::class, 'store']);
+    Route::get('transaction', [VehicleTransactionController::class, 'index']);
+    Route::get('transaction/{idtransaction}', [VehicleTransactionController::class, 'show']);
+    Route::post('buy/{idvehicle}', [VehicleTransactionController::class, 'store']);
     // Route::put('update/{id}',  [VehicleController::class, 'update']);
-    Route::delete('delete/{id}',  [VehicleController::class, 'destroy']);
+    // Route::delete('delete/{id}',  [VehicleController::class, 'destroy']);
 });

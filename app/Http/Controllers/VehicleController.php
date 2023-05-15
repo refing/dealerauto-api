@@ -10,6 +10,7 @@ use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class VehicleController extends Controller
 {
@@ -20,11 +21,6 @@ class VehicleController extends Controller
         $this->user = JWTAuth::parseToken()->authenticate();
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         //return all vehicles for rest api
@@ -35,26 +31,13 @@ class VehicleController extends Controller
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        //Validate data
+        $data = $request->only('name', 'year', 'color', 'price', 'stock_qty', 'flagtype',
+        'motorcycle_machine', 'suspension_type', 'transmission_type',
+        'car_machine', 'capacity', 'car_type');
+        $validator = Validator::make($data, [
             'name' => 'required|string',
             'year' => 'required|integer',
             'color' => 'required|string',
@@ -69,82 +52,32 @@ class VehicleController extends Controller
             'car_type' => 'required_if:flagtype,mobil|string',
         ]);
 
-        $vehicle = new Vehicle([
-            'name' => $validatedData['name'],
-            'year' => $validatedData['year'],
-            'color' => $validatedData['color'],
-            'price' => $validatedData['price'],
-            'stock_qty' => $validatedData['stock_qty'],
-            'flagtype' => $validatedData['flagtype'],
-            'posted_by' => $this->user->_id,
-        ]);
+        //Send failed response if request is not valid
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->messages()], 200);
+        }
 
-        if ($validatedData['flagtype'] === 'Motor') {
-            $subtype = new Motorcycle([
-                'motorcycle_machine' => $validatedData['motorcycle_machine'],
-                'suspension_type' => $validatedData['suspension_type'],
-                'transmission_type' => $validatedData['transmission_type'],
-            ]);
-        } elseif ($validatedData['flagtype'] === 'Mobil') {
-            $subtype = new Car([
-                'car_machine' => $validatedData['car_machine'],
-                'capacity' => $validatedData['capacity'],
-                'car_type' => $validatedData['car_type'],
-            ]);
+        $vehicle           = new Vehicle();
+        $vehicle->_id     = "veh-" . Str::uuid();
+        $vehicle->name     = $request->input('name');
+        $vehicle->year     = $request->input('year');
+        $vehicle->color    = $request->input('color');
+        $vehicle->price    = $request->input('price');
+        $vehicle->stock_qty    = $request->input('stock_qty');
+        $vehicle->flagtype = $request->input('flagtype');
+        $vehicle->posted_by = $this->user->_id;
+
+        if ($request->input('flagtype') === 'Motor') {
+            $vehicle->motorcycle_machine = $request->input('motorcycle_machine');
+            $vehicle->suspension_type = $request->input('suspension_type');
+            $vehicle->transmission_type = $request->input('transmission_type');
+        } elseif ($request->input('flagtype') === 'Mobil') {
+            $vehicle->car_machine = $request->input('car_machine');
+            $vehicle->capacity = $request->input('capacity');
+            $vehicle->car_type = $request->input('car_type');
         }
 
         $vehicle->save();
-        $vehicle->subtype()->save($subtype);
-
-
-
-        //Validate data
-        // $data = $request->only('name', 'year', 'color', 'price', 'stock_qty', 'flagtype');
-        // $validator = Validator::make($data, [
-        //     'name' => 'required|string',
-        //     'year' => 'required|integer',
-        //     'color' => 'required|string',
-        //     'price' => 'required|numeric',
-        //     'stock_qty' => 'required|integer',
-        //     'flagtype' => 'required|in:Motor,Mobil',
-        //     'motorcycle_machine' => 'required_if:flagtype,motor|string',
-        //     'suspension_type' => 'required_if:flagtype,motor|string',
-        //     'transmission_type' => 'required_if:flagtype,motor|string',
-        //     'car_machine' => 'required_if:flagtype,mobil|string',
-        //     'capacity' => 'required_if:flagtype,mobil|integer',
-        //     'car_type' => 'required_if:flagtype,mobil|string',
-        // ]);
-
-        // //Send failed response if request is not valid
-        // if ($validator->fails()) {
-        //     return response()->json(['error' => $validator->messages()], 200);
-        // }
-
-        // $vehicle           = new Vehicle();
-        // $vehicle->name     = $request->input('name');
-        // $vehicle->year     = $request->input('year');
-        // $vehicle->color    = $request->input('color');
-        // $vehicle->price    = $request->input('price');
-        // $vehicle->stock_qty    = $request->input('stock_qty');
-        // $vehicle->flagtype = $request->input('flagtype');
-        // $vehicle->posted_by = $this->user->_id;
-
-        // if ($request->input('flagtype') === 'Motor') {
-        //     $subtype           = new Motorcycle();
-        //     $subtype->motorcycle_machine = $request->input('motorcycle_machine');
-        //     $subtype->suspension_type = $request->input('suspension_type');
-        //     $subtype->transmission_type = $request->input('transmission_type');
-        // } elseif ($request->input('flagtype') === 'Mobil') {
-        //     $subtype           = new Car();
-        //     $subtype->car_machine = $request->input('car_machine');
-        //     $subtype->capacity = $request->input('capacity');
-        //     $subtype->car_type = $request->input('car_type');
-        // }
-
-        // $vehicle->save();
-        // $vehicle->subtype()->save($subtype);
-
-
 
         //Vehicles created, return success response
         return response()->json([
@@ -154,12 +87,6 @@ class VehicleController extends Controller
         ], Response::HTTP_OK);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Vehicle  $vehicle
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //get vehicle by id
@@ -175,34 +102,24 @@ class VehicleController extends Controller
         
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Vehicle  $vehicle
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Vehicle $vehicle)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Vehicle  $vehicle
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
          //Validate data
-         $data = $request->only('name', 'year', 'color', 'price', 'flagtype');
+         $data = $request->only('name', 'year', 'color', 'price', 'stock_qty',
+         'motorcycle_machine', 'suspension_type', 'transmission_type',
+         'car_machine', 'capacity', 'car_type');
          $validator = Validator::make($data, [
-            'name' => 'required|string',
-            'year' => 'required',
-            'color' => 'required',
-            'price' => 'required',
-            'flagtype' => 'required',
+            'name' => 'string',
+            'year' => 'integer',
+            'color' => 'string',
+            'price' => 'numeric',
+            'stock_qty' => 'integer',
+            'motorcycle_machine' => 'string',
+            'suspension_type' => 'string',
+            'transmission_type' => 'string',
+            'car_machine' => 'string',
+            'capacity' => 'integer',
+            'car_type' => 'string',
          ]);
  
          //Send failed response if request is not valid
@@ -210,15 +127,43 @@ class VehicleController extends Controller
              return response()->json(['error' => $validator->messages()], 200);
          }
          $vehicle = Vehicle::find($id);
-         //Request is valid, update vehicle
-         $vehicle = $vehicle->update([
-            'name' => $request->name,
-            'year' => $request->year,
-            'color' => $request->color,
-            'price' => $request->price,
-            'flagtype' => $request->flagtype
-         ]);
- 
+
+         //update vehicle only for available field inputted
+            if ($request->input('name')) {
+                $vehicle->name = $request->input('name');
+            }
+            if ($request->input('year')) {
+                $vehicle->year = $request->input('year');
+            }
+            if ($request->input('color')) {
+                $vehicle->color = $request->input('color');
+            }
+            if ($request->input('price')) {
+                $vehicle->price = $request->input('price');
+            }
+            if ($request->input('stock_qty')) {
+                $vehicle->stock_qty = $request->input('stock_qty');
+            }
+            if ($request->input('motorcycle_machine')) {
+                $vehicle->motorcycle_machine = $request->input('motorcycle_machine');
+            }
+            if ($request->input('suspension_type')) {
+                $vehicle->suspension_type = $request->input('suspension_type');
+            }
+            if ($request->input('transmission_type')) {
+                $vehicle->transmission_type = $request->input('transmission_type');
+            }
+            if ($request->input('car_machine')) {
+                $vehicle->car_machine = $request->input('car_machine');
+            }
+            if ($request->input('capacity')) {
+                $vehicle->capacity = $request->input('capacity');
+            }
+            if ($request->input('car_type')) {
+                $vehicle->car_type = $request->input('car_type');
+            }
+            $vehicle->save();
+
          //Vehicle updated, return success response
          return response()->json([
              'success' => true,
@@ -227,12 +172,6 @@ class VehicleController extends Controller
          ], Response::HTTP_OK);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Vehicle  $vehicle
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //delete vehicle by id for mongodb rest api

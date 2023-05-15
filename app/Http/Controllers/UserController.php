@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -27,11 +28,14 @@ class UserController extends Controller
         }
 
         //Request is valid, create new user
-        $user = User::create([
-        	'name' => $request->name,
-        	'email' => $request->email,
-        	'password' => bcrypt($request->password)
-        ]);
+        $user           = new User();
+        $user->_id     = "user-" . Str::uuid();
+        $user->name     = $request->name;
+        $user->email     = $request->email;
+        $user->password     = bcrypt($request->password);
+        $user->role     = "user";
+
+        $user->save();
 
         //User created, return success response
         return response()->json([
@@ -57,7 +61,7 @@ class UserController extends Controller
         }
 
         //Request is validated
-        //Crean token
+        //Create token
         try {
             if (! $token = JWTAuth::attempt($credentials)) {
                 return response()->json([
