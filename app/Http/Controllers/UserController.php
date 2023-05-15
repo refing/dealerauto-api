@@ -133,37 +133,28 @@ class UserController extends Controller
     {
         
         // try {
-            $validator = Validator::make($request->only('token'), [
-                'token' => 'required'
-            ]);
-    
-            //Send failed response if request is not valid
-            if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Invalid Request',
-                    'error' => $validator->messages()
-                ], 400);
-            }
+        $validator = Validator::make($request->only('token'), [
+            'token' => 'required'
+        ]);
 
-            $user = JWTAuth::authenticate($request->token);
- 
+        //Send failed response if request is not valid
+        if ($validator->fails()) {
             return response()->json([
-                'success' => true,
-                'message' => 'User retrieved succesfully',
-                'data' => [
-                    'user' => $user
-                ]
-            ]);
-        // } catch (JWTException $exception) {
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => 'Something went wrong'
-        //     ], 500);
-        // }
- 
-        
- 
+                'success' => false,
+                'message' => 'Invalid Request',
+                'error' => $validator->messages()
+            ], 400);
+        }
+
+        $user = JWTAuth::authenticate($request->token);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User retrieved succesfully',
+            'data' => [
+                'user' => $user
+            ]
+        ]);
         
     }
 }
