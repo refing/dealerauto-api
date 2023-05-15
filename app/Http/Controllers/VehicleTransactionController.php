@@ -25,8 +25,12 @@ class VehicleTransactionController extends Controller
         //return all vehicles for rest api
         $vehicletransactions = VehicleTransaction::get()->toArray();
         return response()->json([
-            'data' => $vehicletransactions
-        ], Response::HTTP_OK);
+            'success' => true,
+            'message' => 'Vehicle transactions retrieved successfully',
+            'data' => [
+                'transactions' => $vehicletransactions
+            ]
+        ], 200);
 
     }
 
@@ -40,7 +44,11 @@ class VehicleTransactionController extends Controller
 
         //Send failed response if request is not valid
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 200);
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid request',
+                'error' => $validator->messages()
+            ], 200);
         }
 
         $vehicle = Vehicle::find($idvehicle);
@@ -62,7 +70,7 @@ class VehicleTransactionController extends Controller
             'success' => true,
             'message' => 'Vehicle transaction created successfully',
             'data' => $vehicleTransaction
-        ], Response::HTTP_OK);
+        ], 200);
     }
 
     public function show($idtransaction)
@@ -72,11 +80,17 @@ class VehicleTransactionController extends Controller
         if (!$vehicleTransaction) {
             return response()->json([
                 'success' => false,
-                'message' => 'Sorry, transaction with id ' . $idtransaction . ' cannot be found'
+                'message' => 'Sorry, transaction with id ' . $idtransaction . ' cannot be found',
+                'error' => 'Data not found'
             ], 400);
         }
-
-        return $vehicleTransaction;
+        return response()->json([
+            'success' => true,
+            'message' => 'Vehicle transaction retrieved successfully',
+            'data' => [
+                'transaction' => $vehicleTransaction
+            ]
+        ], 200);
         
     }
 
@@ -116,8 +130,12 @@ class VehicleTransactionController extends Controller
         
 
         return response()->json([
-            'data' => $vehicleTransaction
-        ], Response::HTTP_OK);
+            'success' => true,
+            'message' => 'Vehicle sales report retrieved successfully',
+            'data' => [
+                'vehiclesales' => $vehicleTransaction
+            ]
+        ], 200);
 
     }
 

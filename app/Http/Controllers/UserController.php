@@ -24,7 +24,11 @@ class UserController extends Controller
 
         //Send failed response if request is not valid
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 200);
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid Request',
+                'error' => $validator->messages()
+            ], 400);
         }
 
         //Request is valid, create new user
@@ -41,8 +45,10 @@ class UserController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'User created successfully',
-            'data' => $user
-        ], Response::HTTP_OK);
+            'data' => [
+                'user' => $user
+            ]
+        ], 200);
     }
  
     public function authenticate(Request $request)
@@ -57,7 +63,11 @@ class UserController extends Controller
 
         //Send failed response if request is not valid
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 200);
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid Request',
+                'error' => $validator->messages()
+            ], 400);
         }
 
         //Request is validated
@@ -80,8 +90,11 @@ class UserController extends Controller
  		//Token created, return with success response and jwt token
         return response()->json([
             'success' => true,
-            'token' => $token,
-        ]);
+            'message' => 'Login Success',
+            'data' => [
+                'token' => $token,
+            ]
+        ], 200);
     }
  
     public function logout(Request $request)
@@ -93,7 +106,11 @@ class UserController extends Controller
 
         //Send failed response if request is not valid
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 200);
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid Request',
+                'error' => $validator->messages()
+            ], 400);
         }
 
 		//Request is validated, do logout        
@@ -108,18 +125,45 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Sorry, user cannot be logged out'
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            ], 500);
         }
     }
  
     public function get_user(Request $request)
     {
-        $this->validate($request, [
-            'token' => 'required'
-        ]);
+        
+        // try {
+            $validator = Validator::make($request->only('token'), [
+                'token' => 'required'
+            ]);
+    
+            //Send failed response if request is not valid
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid Request',
+                    'error' => $validator->messages()
+                ], 400);
+            }
+
+            $user = JWTAuth::authenticate($request->token);
  
-        $user = JWTAuth::authenticate($request->token);
+            return response()->json([
+                'success' => true,
+                'message' => 'User retrieved succesfully',
+                'data' => [
+                    'user' => $user
+                ]
+            ]);
+        // } catch (JWTException $exception) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Something went wrong'
+        //     ], 500);
+        // }
  
-        return response()->json(['user' => $user]);
+        
+ 
+        
     }
 }

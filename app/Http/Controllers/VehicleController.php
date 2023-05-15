@@ -26,8 +26,10 @@ class VehicleController extends Controller
         //return all vehicles for rest api
         $vehicles = Vehicle::get()->toArray();
         return response()->json([
-            'data' => $vehicles
-        ], Response::HTTP_OK);
+            'data' => [
+                'vehicles' => $vehicles
+            ]
+        ], 200);
 
     }
 
@@ -54,7 +56,11 @@ class VehicleController extends Controller
 
         //Send failed response if request is not valid
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 200);
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid Request',
+                'error' => $validator->messages()
+            ], 400);
         }
 
         $vehicle           = new Vehicle();
@@ -83,8 +89,10 @@ class VehicleController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Vehicles created successfully',
-            'data' => $vehicle
-        ], Response::HTTP_OK);
+            'data' => [
+                'vehicle' => $vehicle
+            ]
+        ], 200);
     }
 
     public function show($id)
@@ -98,7 +106,13 @@ class VehicleController extends Controller
             ], 400);
         }
 
-        return $vehicle;
+        return response()->json([
+            'success' => true,
+            'message' => 'Vehicle retrieved successfully',
+            'data' => [
+                'vehicle' => $vehicle
+            ]
+        ], 200);;
         
     }
 
@@ -124,7 +138,11 @@ class VehicleController extends Controller
  
          //Send failed response if request is not valid
          if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()], 200);
+             return response()->json([
+                'success' => false,
+                'message' => 'Invalid Request',
+                'error' => $validator->messages()
+            ], 200);
          }
          $vehicle = Vehicle::find($id);
 
@@ -169,7 +187,7 @@ class VehicleController extends Controller
              'success' => true,
              'message' => 'Vehicle updated successfully',
              'data' => $vehicle
-         ], Response::HTTP_OK);
+         ], 200);
     }
 
     public function destroy($id)
@@ -187,7 +205,7 @@ class VehicleController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Vehicle deleted successfully'
-        ], Response::HTTP_OK);
+        ], 200);
     }
 
     public function showstock()
@@ -234,8 +252,10 @@ class VehicleController extends Controller
         });
 
         return response()->json([
+            'success' => true,
+            'message' => 'Vehicles stock retrieved successfully',
             'data' => $vehicles
-        ], Response::HTTP_OK);
+        ], 200);
 
     }
 }
