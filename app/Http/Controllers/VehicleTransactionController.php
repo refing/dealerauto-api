@@ -57,7 +57,6 @@ class VehicleTransactionController extends Controller
         $vehicle->stock_qty = $vehicle->stock_qty - $request->input('qty');
         $vehicle->save();
 
-
         //Vehicles created, return success response
         return response()->json([
             'success' => true,
@@ -79,6 +78,47 @@ class VehicleTransactionController extends Controller
 
         return $vehicleTransaction;
         
+    }
+
+    public function showreport()
+    {
+        $vehicleTransaction = VehicleTransaction::raw(function($collection)
+        {
+            return $collection->aggregate([
+                [
+                    '$lookup' => [
+                        'from' => 'vehicles',
+                        'localField' => 'id_vehicle',
+                        'foreignField' => '_id',
+                        'as' => 'vehicle'
+                    ]
+                ],
+                [
+                    '$unwind' => '$vehicle'
+                ],
+                [
+                    '$group' => [
+                        '_id' => '$vehicle.name',
+                        'totalprice' => [
+                            '$sum' => '$totalprice'
+                        ]
+                    ]
+                ],
+                [
+                    '$project' => [
+                        'name' => '$_id',
+                        'totalsales' => '$totalprice',
+                        '_id' => 0
+                    ]
+                ]
+            ]);
+        });
+        
+
+        return response()->json([
+            'data' => $vehicleTransaction
+        ], Response::HTTP_OK);
+
     }
 
 }

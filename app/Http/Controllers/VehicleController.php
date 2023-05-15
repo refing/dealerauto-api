@@ -174,7 +174,6 @@ class VehicleController extends Controller
 
     public function destroy($id)
     {
-        //delete vehicle by id for mongodb rest api
         $vehicle = Vehicle::find($id);
         if (!$vehicle) {
             return response()->json([
@@ -189,5 +188,54 @@ class VehicleController extends Controller
             'success' => true,
             'message' => 'Vehicle deleted successfully'
         ], Response::HTTP_OK);
+    }
+
+    public function showstock()
+    {
+        $vehicles = Vehicle::raw(function($collection)
+        {
+            return $collection->aggregate([
+                [
+                    '$group' => [
+                        '_id' => '$flagtype',
+                        'type' => ['$first' => '$flagtype'],
+                        'total' => ['$sum' => '$stock_qty'],
+                        'vehicles' => [
+                            '$push' => [
+                                'name' => '$name',
+                                'stock_qty' => '$stock_qty',
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    '$group' => [
+                        '_id' => null,
+                        'types' => [
+                            '$push' => [
+                                'type' => '$type',
+                                'total' => '$total',
+                                'vehicles' => '$vehicles',
+                            ],
+                        ],
+                        'total' => [
+                            '$sum' => '$total',
+                        ],
+                    ],
+                ],
+                [
+                    '$project' => [
+                        '_id' => 0,
+                        'types' => 1,
+                        'total' => 1,
+                    ],
+                ],
+            ]);
+        });
+
+        return response()->json([
+            'data' => $vehicles
+        ], Response::HTTP_OK);
+
     }
 }

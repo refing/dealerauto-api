@@ -37,10 +37,13 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('create', [VehicleController::class, 'store']);
     Route::put('update/{id}',  [VehicleController::class, 'update']);
     Route::delete('delete/{id}',  [VehicleController::class, 'destroy']);
+    Route::get('stock',  [VehicleController::class, 'showstock']);
+    
 
     Route::get('transaction', [VehicleTransactionController::class, 'index']);
     Route::get('transaction/{idtransaction}', [VehicleTransactionController::class, 'show']);
     Route::post('buy/{idvehicle}', [VehicleTransactionController::class, 'store']);
+    Route::get('report',  [VehicleTransactionController::class, 'showreport']);
     // Route::put('update/{id}',  [VehicleController::class, 'update']);
     // Route::delete('delete/{id}',  [VehicleController::class, 'destroy']);
 });
