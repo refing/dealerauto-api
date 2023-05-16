@@ -19,3 +19,6 @@ MONGO_DB_PASSWORD= {{dikosongkan}}
 
 ## Data Schema & Routes Information
 <img src="misc/schema.png" alt="schema"/>
+
+## Postman
+Tersedia konfigurasi collection dan environment untuk menguji api dengan postman pada folder postman.

@@ -1,0 +1,968 @@
+{
+	"info": {
+		"_postman_id": "9624da07-663e-4fcf-af90-aba93ac963a4",
+		"name": "dealership laravel",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19714917"
+	},
+	"item": [
+		{
+			"name": "registrasi",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\" : \"Jon\",\r\n    \"email\" : \"Jon@mail.com\",\r\n    \"password\" : \"12341234\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/register",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login incorrect",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\" : \"John@mmail.com\",\r\n    \"password\" : \"1234a1234\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/login",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login correct + setting env bearer token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = JSON.parse(responseBody);\r",
+							"pm.environment.set(\"token\", res.data.token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\" : \"Jon@mail.com\",\r\n    \"password\" : \"12341234\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/login",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjg0MDM0NzU5LCJleHAiOjE2ODQwMzgzNTksIm5iZiI6MTY4NDAzNDc1OSwianRpIjoiVktmdUlhZk1vUkk4ZXdYSyIsInN1YiI6IjY0NjA1NGJjZmYwYzVkZDBhNjAxM2VmMiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.8nPQ0Xt0r6HRYAD_LeuQfYnc-mI6IHjoUU3nIt-fGR4",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"token\" : \"{{token}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/user",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user invalid token",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjg0MDM0NzU5LCJleHAiOjE2ODQwMzgzNTksIm5iZiI6MTY4NDAzNDc1OSwianRpIjoiVktmdUlhZk1vUkk4ZXdYSyIsInN1YiI6IjY0NjA1NGJjZmYwYzVkZDBhNjAxM2VmMiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.8nPQ0Xt0r6HRYAD_LeuQfYnc-mI6IHjoUU3nIt-fGR4",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"token\" : \"1sas\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/user",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get logout",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjg0MDM0NzU5LCJleHAiOjE2ODQwMzgzNTksIm5iZiI6MTY4NDAzNDc1OSwianRpIjoiVktmdUlhZk1vUkk4ZXdYSyIsInN1YiI6IjY0NjA1NGJjZmYwYzVkZDBhNjAxM2VmMiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.8nPQ0Xt0r6HRYAD_LeuQfYnc-mI6IHjoUU3nIt-fGR4",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"token\" : \"{{token}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/logout",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post vehicle motor",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjg0MDU2NTAyLCJleHAiOjE2ODQwNjAxMDIsIm5iZiI6MTY4NDA1NjUwMiwianRpIjoiN1RkcFpwQUxScFJtdjQ5ayIsInN1YiI6IjY0NjBhOWE1YzFjY2ZhZGExZDA5ZmZmMiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.9Lhl-b8kIezG395_eFYkfdMDxOuKuBT7FZ8mk86hD1Q",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\" : \"Honda Scoopy\",\r\n    \"year\" : \"2023\",\r\n    \"color\" : \"red\",\r\n    \"price\" : \"21000000\",\r\n    \"stock_qty\" : 234,\r\n    \"flagtype\" : \"Motor\",\r\n    \"motorcycle_machine\" : \"L23\",\r\n    \"suspension_type\" : \"Coil\",\r\n    \"transmission_type\" : \"Automatic\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/vehicles/create",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"vehicles",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post vehicle motor incomplete",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjg0MDU2NTAyLCJleHAiOjE2ODQwNjAxMDIsIm5iZiI6MTY4NDA1NjUwMiwianRpIjoiN1RkcFpwQUxScFJtdjQ5ayIsInN1YiI6IjY0NjBhOWE1YzFjY2ZhZGExZDA5ZmZmMiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.9Lhl-b8kIezG395_eFYkfdMDxOuKuBT7FZ8mk86hD1Q",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\" : \"Honda Scoopy\",\r\n    \"year\" : \"2023\",\r\n    \"color\" : \"red\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/vehicles/create",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"vehicles",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post vehicle motor wrong type",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjg0MDU2NTAyLCJleHAiOjE2ODQwNjAxMDIsIm5iZiI6MTY4NDA1NjUwMiwianRpIjoiN1RkcFpwQUxScFJtdjQ5ayIsInN1YiI6IjY0NjBhOWE1YzFjY2ZhZGExZDA5ZmZmMiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.9Lhl-b8kIezG395_eFYkfdMDxOuKuBT7FZ8mk86hD1Q",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\" : \"Honda CBR\",\r\n    \"year\" : \"2008\",\r\n    \"color\" : \"red\",\r\n    \"price\" : \"200000000\",\r\n    \"stock_qty\" : 23,\r\n    \"flagtype\" : \"Momor\",\r\n    \"motorcycle_machine\" : \"A100\",\r\n    \"suspension_type\" : \"Coil\",\r\n    \"transmission_type\" : \"Manual\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/vehicles/create",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"vehicles",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post vehicle mobil",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjg0MDI5MzQyLCJleHAiOjE2ODQwMzI5NDIsIm5iZiI6MTY4NDAyOTM0MiwianRpIjoiWm51aFJmY1hkS1F0QkRyUiIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.vwmnuO_1uFy5oTVjQxsHpUJ0aTrGFYGOBUko49SY3fU",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\" : \"Tesla Model 3\",\r\n    \"year\" : \"2020\",\r\n    \"color\" : \"white\",\r\n    \"price\" : \"1500000000\",\r\n    \"stock_qty\" : 15,\r\n    \"flagtype\" : \"Mobil\",\r\n    \"car_machine\" : \"X10\",\r\n    \"capacity\" : \"5\",\r\n    \"car_type\" : \"Electric\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/vehicles/create",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"vehicles",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get vehicles",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjg0MDM2NjcxLCJleHAiOjE2ODQwNDAyNzEsIm5iZiI6MTY4NDAzNjY3MSwianRpIjoiOFdVbnZ5RG5PT0lIMVA1RSIsInN1YiI6IjY0NjA1NGJjZmYwYzVkZDBhNjAxM2VmMiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.2hVnLn9FcqI8UH1HjeQNJOjSSzhLLKe0yc-O6ndEnf4",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/vehicles/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"vehicles",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get vehicles id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjg0MDM2NjcxLCJleHAiOjE2ODQwNDAyNzEsIm5iZiI6MTY4NDAzNjY3MSwianRpIjoiOFdVbnZ5RG5PT0lIMVA1RSIsInN1YiI6IjY0NjA1NGJjZmYwYzVkZDBhNjAxM2VmMiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.2hVnLn9FcqI8UH1HjeQNJOjSSzhLLKe0yc-O6ndEnf4",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/vehicles/id/veh-903b9e6b-a4fb-45e0-8ef1-557708edf458",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"vehicles",
+						"id",
+						"veh-903b9e6b-a4fb-45e0-8ef1-557708edf458"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get vehicles id false",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjg0MDM2MTM3LCJleHAiOjE2ODQwMzk3MzcsIm5iZiI6MTY4NDAzNjEzNywianRpIjoieVZQd3JTa3BrN1hMSkJycyIsInN1YiI6IjY0NjA1NGJjZmYwYzVkZDBhNjAxM2VmMiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.E1k8Infflp2DgrQ3RyecZXOmXI9ItKmz7p4MGkZQ3w8",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/vehicles/s64605a35b3ed5e90780322f",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"vehicles",
+						"s64605a35b3ed5e90780322f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete vehicle by id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjg0MDM2MTM3LCJleHAiOjE2ODQwMzk3MzcsIm5iZiI6MTY4NDAzNjEzNywianRpIjoieVZQd3JTa3BrN1hMSkJycyIsInN1YiI6IjY0NjA1NGJjZmYwYzVkZDBhNjAxM2VmMiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.E1k8Infflp2DgrQ3RyecZXOmXI9ItKmz7p4MGkZQ3w8",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/vehicles/delete/veh-903b9e6b-a4fb-45e0-8ef1-557708edf458",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"vehicles",
+						"delete",
+						"veh-903b9e6b-a4fb-45e0-8ef1-557708edf458"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update vehicle by id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjg0MDM2MTM3LCJleHAiOjE2ODQwMzk3MzcsIm5iZiI6MTY4NDAzNjEzNywianRpIjoieVZQd3JTa3BrN1hMSkJycyIsInN1YiI6IjY0NjA1NGJjZmYwYzVkZDBhNjAxM2VmMiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.E1k8Infflp2DgrQ3RyecZXOmXI9ItKmz7p4MGkZQ3w8",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\" : \"Honda ww\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/vehicles/update/veh-903b9e6b-a4fb-45e0-8ef1-557708edf458",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"vehicles",
+						"update",
+						"veh-903b9e6b-a4fb-45e0-8ef1-557708edf458"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update vehicle by false id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjg0MDM2MTM3LCJleHAiOjE2ODQwMzk3MzcsIm5iZiI6MTY4NDAzNjEzNywianRpIjoieVZQd3JTa3BrN1hMSkJycyIsInN1YiI6IjY0NjA1NGJjZmYwYzVkZDBhNjAxM2VmMiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.E1k8Infflp2DgrQ3RyecZXOmXI9ItKmz7p4MGkZQ3w8",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"color\" : \"blue\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/vehicles/update/64605a35b3ed5e90780322f2",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"vehicles",
+						"update",
+						"64605a35b3ed5e90780322f2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get stock",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/vehicles/stock/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"vehicles",
+						"stock",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post transaction",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjg0MDM2NjcxLCJleHAiOjE2ODQwNDAyNzEsIm5iZiI6MTY4NDAzNjY3MSwianRpIjoiOFdVbnZ5RG5PT0lIMVA1RSIsInN1YiI6IjY0NjA1NGJjZmYwYzVkZDBhNjAxM2VmMiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.2hVnLn9FcqI8UH1HjeQNJOjSSzhLLKe0yc-O6ndEnf4",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"qty\" : 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/transaction/buy/veh-903b9e6b-a4fb-45e0-8ef1-557708edf458",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"transaction",
+						"buy",
+						"veh-903b9e6b-a4fb-45e0-8ef1-557708edf458"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get transaction",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjg0MDM2NjcxLCJleHAiOjE2ODQwNDAyNzEsIm5iZiI6MTY4NDAzNjY3MSwianRpIjoiOFdVbnZ5RG5PT0lIMVA1RSIsInN1YiI6IjY0NjA1NGJjZmYwYzVkZDBhNjAxM2VmMiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.2hVnLn9FcqI8UH1HjeQNJOjSSzhLLKe0yc-O6ndEnf4",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/transaction/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"transaction",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get transaction by id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjg0MDM2NjcxLCJleHAiOjE2ODQwNDAyNzEsIm5iZiI6MTY4NDAzNjY3MSwianRpIjoiOFdVbnZ5RG5PT0lIMVA1RSIsInN1YiI6IjY0NjA1NGJjZmYwYzVkZDBhNjAxM2VmMiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.2hVnLn9FcqI8UH1HjeQNJOjSSzhLLKe0yc-O6ndEnf4",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/transaction/id/tsc-24b281e0-96f2-3d12-a2bb-a8f0168504f0",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"transaction",
+						"id",
+						"tsc-24b281e0-96f2-3d12-a2bb-a8f0168504f0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get transaction by false id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjg0MDM2NjcxLCJleHAiOjE2ODQwNDAyNzEsIm5iZiI6MTY4NDAzNjY3MSwianRpIjoiOFdVbnZ5RG5PT0lIMVA1RSIsInN1YiI6IjY0NjA1NGJjZmYwYzVkZDBhNjAxM2VmMiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.2hVnLn9FcqI8UH1HjeQNJOjSSzhLLKe0yc-O6ndEnf4",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/transaction/64617be923a88d00240c5de4",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"transaction",
+						"64617be923a88d00240c5de4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get report",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/transaction/report/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"transaction",
+						"report",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
