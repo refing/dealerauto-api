@@ -22,7 +22,6 @@ class VehicleController extends Controller
 
     public function index()
     {
-        // $vehicles = Vehicle::get()->toArray();
         $vehicles = $this->vehicleService->getVehicles();
         return response()->json([
             'data' => [
@@ -35,13 +34,41 @@ class VehicleController extends Controller
     public function store(Request $request)
     {
 
+        
+        $data = $request->only('name', 'year', 'color', 'price', 'stock_qty', 'flagtype',
+        'motorcycle_machine', 'suspension_type', 'transmission_type',
+        'car_machine', 'capacity', 'car_type');
+
+        $validator = Validator::make($data, [
+            'name' => 'required|string',
+            'year' => 'required|integer',
+            'color' => 'required|string',
+            'price' => 'required|numeric',
+            'stock_qty' => 'required|integer',
+            'flagtype' => 'required|in:Motor,Mobil',
+            'motorcycle_machine' => 'required_if:flagtype,motor|string',
+            'suspension_type' => 'required_if:flagtype,motor|string',
+            'transmission_type' => 'required_if:flagtype,motor|string',
+            'car_machine' => 'required_if:flagtype,mobil|string',
+            'capacity' => 'required_if:flagtype,mobil|integer',
+            'car_type' => 'required_if:flagtype,mobil|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid request',
+                'error' => $validator->messages()
+            ], 400);
+        }
+
         $vehicle = $this->vehicleService->createVehicle($request);
 
         if (!$vehicle) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to create vehicle',
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            ], 500);
         }
 
         return response()->json([
@@ -50,18 +77,17 @@ class VehicleController extends Controller
             'data' => [
                 'vehicle' => $vehicle,
             ],
-        ], Response::HTTP_CREATED);
+        ], 201);
     }
 
     public function show($id)
     {
-        // $vehicle = Vehicle::find($id);
         $vehicle = $this->vehicleService->getVehicleById($id);
         if (!$vehicle) {
             return response()->json([
                 'success' => false,
                 'message' => 'Sorry, vehicle with id ' . $id . ' cannot be found'
-            ], 400);
+            ], 404);
         }
 
         return response()->json([
@@ -76,9 +102,33 @@ class VehicleController extends Controller
 
     public function update(Request $request, $id)
     {
+
+        $data = $request->only('name', 'year', 'color', 'price', 'stock_qty',
+        'motorcycle_machine', 'suspension_type', 'transmission_type',
+        'car_machine', 'capacity', 'car_type');
+        $validator = Validator::make($data, [
+           'name' => 'string',
+           'year' => 'integer',
+           'color' => 'string',
+           'price' => 'numeric',
+           'stock_qty' => 'integer',
+           'motorcycle_machine' => 'string',
+           'suspension_type' => 'string',
+           'transmission_type' => 'string',
+           'car_machine' => 'string',
+           'capacity' => 'integer',
+           'car_type' => 'string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid request',
+                'error' => $validator->messages()
+            ], 400);
+        }
          
         $vehicle = $this->vehicleService->updateVehicleById($request, $id);
-        //Vehicle updated, return success response
         return response()->json([
             'success' => true,
             'message' => 'Vehicle updated successfully',
@@ -88,16 +138,13 @@ class VehicleController extends Controller
 
     public function destroy($id)
     {
-        // $vehicle = Vehicle::find($id);
         $vehicle = $this->vehicleService->deleteVehicleById($id);
         if (!$vehicle) {
             return response()->json([
                 'success' => false,
                 'message' => 'Sorry, vehicle with id ' . $id . ' cannot be found'
-            ], 400);
+            ], 404);
         }
-        
-        // $vehicle->delete();
         
         return response()->json([
             'success' => true,

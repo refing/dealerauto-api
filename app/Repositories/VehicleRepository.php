@@ -50,42 +50,41 @@ class VehicleRepository
     {
         $vehicle = Vehicle::find($id);
 
-        //update vehicle only for available field inputted
-           if ($request->input('name')) {
-               $vehicle->name = $request->input('name');
-           }
-           if ($request->input('year')) {
-               $vehicle->year = $request->input('year');
-           }
-           if ($request->input('color')) {
-               $vehicle->color = $request->input('color');
-           }
-           if ($request->input('price')) {
-               $vehicle->price = $request->input('price');
-           }
-           if ($request->input('stock_qty')) {
-               $vehicle->stock_qty = $request->input('stock_qty');
-           }
-           if ($request->input('motorcycle_machine')) {
-               $vehicle->motorcycle_machine = $request->input('motorcycle_machine');
-           }
-           if ($request->input('suspension_type')) {
-               $vehicle->suspension_type = $request->input('suspension_type');
-           }
-           if ($request->input('transmission_type')) {
-               $vehicle->transmission_type = $request->input('transmission_type');
-           }
-           if ($request->input('car_machine')) {
-               $vehicle->car_machine = $request->input('car_machine');
-           }
-           if ($request->input('capacity')) {
-               $vehicle->capacity = $request->input('capacity');
-           }
-           if ($request->input('car_type')) {
-               $vehicle->car_type = $request->input('car_type');
-           }
-           $vehicle->save();
-           return $vehicle;
+        if ($request->input('name')) {
+            $vehicle->name = $request->input('name');
+        }
+        if ($request->input('year')) {
+            $vehicle->year = $request->input('year');
+        }
+        if ($request->input('color')) {
+            $vehicle->color = $request->input('color');
+        }
+        if ($request->input('price')) {
+            $vehicle->price = $request->input('price');
+        }
+        if ($request->input('stock_qty')) {
+            $vehicle->stock_qty = $request->input('stock_qty');
+        }
+        if ($request->input('motorcycle_machine')) {
+            $vehicle->motorcycle_machine = $request->input('motorcycle_machine');
+        }
+        if ($request->input('suspension_type')) {
+            $vehicle->suspension_type = $request->input('suspension_type');
+        }
+        if ($request->input('transmission_type')) {
+            $vehicle->transmission_type = $request->input('transmission_type');
+        }
+        if ($request->input('car_machine')) {
+            $vehicle->car_machine = $request->input('car_machine');
+        }
+        if ($request->input('capacity')) {
+            $vehicle->capacity = $request->input('capacity');
+        }
+        if ($request->input('car_type')) {
+            $vehicle->car_type = $request->input('car_type');
+        }
+        $vehicle->save();
+        return $vehicle;
     }
 
     public function deleteVehicleById($id)

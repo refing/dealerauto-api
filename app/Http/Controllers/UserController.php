@@ -14,7 +14,6 @@ class UserController extends Controller
 {
     public function register(Request $request)
     {
-    	//Validate data
         $data = $request->only('name', 'email', 'password');
         $validator = Validator::make($data, [
             'name' => 'required|string',
@@ -22,7 +21,6 @@ class UserController extends Controller
             'password' => 'required|string|min:6|max:50'
         ]);
 
-        //Send failed response if request is not valid
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -31,7 +29,6 @@ class UserController extends Controller
             ], 400);
         }
 
-        //Request is valid, create new user
         $user           = new User();
         $user->_id     = "user-" . Str::uuid();
         $user->name     = $request->name;
@@ -41,7 +38,6 @@ class UserController extends Controller
 
         $user->save();
 
-        //User created, return success response
         return response()->json([
             'success' => true,
             'message' => 'User created successfully',
@@ -55,13 +51,11 @@ class UserController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        //valid credential
         $validator = Validator::make($credentials, [
             'email' => 'required|email',
             'password' => 'required|string|min:6|max:50'
         ]);
 
-        //Send failed response if request is not valid
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -70,8 +64,6 @@ class UserController extends Controller
             ], 400);
         }
 
-        //Request is validated
-        //Create token
         try {
             if (! $token = JWTAuth::attempt($credentials)) {
                 return response()->json([
@@ -87,7 +79,6 @@ class UserController extends Controller
                 ], 500);
         }
  	
- 		//Token created, return with success response and jwt token
         return response()->json([
             'success' => true,
             'message' => 'Login Success',
@@ -99,12 +90,10 @@ class UserController extends Controller
  
     public function logout(Request $request)
     {
-        //valid credential
         $validator = Validator::make($request->only('token'), [
             'token' => 'required'
         ]);
 
-        //Send failed response if request is not valid
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -112,8 +101,7 @@ class UserController extends Controller
                 'error' => $validator->messages()
             ], 400);
         }
-
-		//Request is validated, do logout        
+   
         try {
             JWTAuth::invalidate($request->token);
  
@@ -132,12 +120,10 @@ class UserController extends Controller
     public function get_user(Request $request)
     {
         
-        // try {
         $validator = Validator::make($request->only('token'), [
             'token' => 'required'
         ]);
 
-        //Send failed response if request is not valid
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
